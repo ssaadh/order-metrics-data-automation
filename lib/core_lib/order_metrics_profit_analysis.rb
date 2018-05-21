@@ -34,41 +34,66 @@ class OrderMetricsProfitAnalysis < Parent
   end
   
   def run
+    result = load
+    
+    @container = single
+    
+    @container = grab_data( @container )
+    @container = specific_ad_accounts( @container )
+    
+    # k, could've just ended with line above without assigning
+    @container
+  end
+  
+  def load
     @lib.on_and_loaded_profit_analysis?
+    
+    sleep 1
         
-    # @lib.check_for_todays_date?
-        
+    if !@lib.check_for_todays_date?
+      @lib.date_range_picker_element.click
+      date_range_picker_today_element.wait_until_present
+      date_range_picker_today_element.click
+    end
+    
     @lib.data_updating_gear_element.wait_while_present
     # dno
     sleep 5
     
-    @browser.refresh
+    @browser.refresh      
     
-    @lib.on_and_loaded_profit_analysis?
+    result = @lib.on_and_loaded_profit_analysis?    
     # dno
-    sleep 5
+    sleep 5 if result
     
-    @container = single
-    @container.number_of_orders = @lib.number_of_orders
-    @container.revenue = @lib.revenue
-    # @container.discounts = @lib.discounts
-    @container.cogs = @lib.cogs
-    @container.shipping = @lib.shipping
-    @container.transaction_fees = @lib.transaction_fees
-    @container.refunds = @lib.refunds
+    result
+  end
+  
+  def grab_data( container )        
+    container.number_of_orders = @lib.number_of_orders
+    container.revenue = @lib.revenue
+    # container.discounts = @lib.discounts
+    container.cogs = @lib.cogs
+    container.shipping = @lib.shipping
+    container.transaction_fees = @lib.transaction_fees
+    container.refunds = @lib.refunds
     
-    @container.total_fulfillment_costs = @lib.total_fulfillment_costs
-    @container.total_revenue = @lib.total_revenue
-    # @container.profit = nil = @lib.profit
+    container.total_fulfillment_costs = @lib.total_fulfillment_costs
+    container.total_revenue = @lib.total_revenue
+    # container.profit = nil = @lib.profit
     
-    @container.ad_spend = @lib.ad_spend
+    container.ad_spend = @lib.ad_spend
     
+    container
+  end
+  
+  def specific_ad_accounts( container )
     result = @lib.view_specific_ad_spend_accounts
     
-    @container.ad_account_1 = @lib.specific_ad_spend_account_amount( 'FomoSupplyCo' )
-    @container.ad_account_2 = @lib.specific_ad_spend_account_amount( 'FomoSupplyCo 2' )
-    @container.ad_account_4 = @lib.specific_ad_spend_account_amount( 'FomoSupplyCo 4' )
+    container.ad_account_1 = @lib.specific_ad_spend_account_amount( 'FomoSupplyCo' )
+    container.ad_account_2 = @lib.specific_ad_spend_account_amount( 'FomoSupplyCo 2' )
+    container.ad_account_4 = @lib.specific_ad_spend_account_amount( 'FomoSupplyCo 4' )
     
-    @container
+    container
   end
 end
