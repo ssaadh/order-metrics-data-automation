@@ -99,15 +99,19 @@ gem 'user_agent_parser'
 # Might use these mainstay gems:
 
 # just other gems
-# gem 'hashie'
+gem 'hashie'
 
 # env variables
 # gem 'dotenv-rails'
 
 # logging
-# gem 'multi_logger'
+gem 'multi_logger'
 
 # email
 # gem 'sendgrid'
 # notifications
 # gem 'pushover', github: 'martijnrusschen/pushover'
+
+# automation gluing
+# for now since it'll be faster and easier, but pointlessly have to pay for something that isn't needed when there's more time. Plus 1000 row limit per sheet
+gem 'sheetsu'

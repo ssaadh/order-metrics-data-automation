@@ -89,6 +89,7 @@ GEM
     ffi (1.9.23)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
+    hashie (3.5.7)
     headless (2.3.1)
     i18n (1.0.1)
       concurrent-ruby (~> 1.0)
@@ -121,6 +122,8 @@ GEM
     minitest (5.11.3)
     msgpack (1.2.4)
     multi_json (1.13.1)
+    multi_logger (0.1.0)
+      railties
     multipart-post (2.0.0)
     nio4r (2.3.1)
     nokogiri (1.8.2)
@@ -194,6 +197,7 @@ GEM
       rubyzip (~> 1.2)
     sentry-raven (2.7.3)
       faraday (>= 0.7.6, < 1.0)
+    sheetsu (1.1.0)
     spring (2.0.2)
       activesupport (>= 4.2)
     spring-watcher-listen (2.0.1)
@@ -243,11 +247,13 @@ DEPENDENCIES
   capybara (>= 2.15, < 4.0)
   chromedriver-helper
   coffee-rails (~> 4.2)
+  hashie
   headless
   jazz_fingers
   jbuilder (~> 2.5)
   listen (>= 3.0.5, < 3.2)
   mini_magick
+  multi_logger
   nokogiri
   oily_png
   pry
@@ -259,6 +265,7 @@ DEPENDENCIES
   sass-rails (~> 5.0)
   selenium-webdriver
   sentry-raven
+  sheetsu
   spring
   spring-watcher-listen (~> 2.0.0)
   sqlite3
