@@ -8,4 +8,4 @@ require_relative 'watir_base/watir_base_initializer.rb'
 require_relative 'ma_lib/initializer.rb'
 
 # Actual own code that is running and controlling the code
-require_relative 'core_lib/core_initializer.rb'
+require_relative 'core_lib/initializer.rb'
