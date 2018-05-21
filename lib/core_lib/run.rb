@@ -32,51 +32,17 @@ class Run
         @login = Login.new( @wrap )
         @pa = OrderMetricsProfitAnalysis.new( @wrap )
         
+        Pry::rescue{
         login_result = @login.login
         
         @container = @pa.run
-        
+                
         # @TODO have the API url somewhere that can be changed without version controlled code
         @client = Sheetsu::Client.new( 'e317450b7654' )
         
-        
-        ## Not scraped sheet values
-        
-        # basic 2018-05-21 style
-        date = Date.today.strftime( '%Y-%m-%d' )        
-        # Just the hour, zero-padded
-        time = DateTime.today.strftime( '%H' )
-        
-        # date plus hour
-        name = "#{ date } #{ time }"
-        # set to a variable that can be adjusted
-        grouping = 'D1'        
-        day_of_week = Date.today.strftime( '%A' )
-        
-        
-        ## Adjustments from scraped values
-        # @TODO sheet name should be in some variable outside of version control
-        rows = @client.read( 
-        search: { Date: date },
-        sheet: '2018-05 daily adjustments'
-        )
-        
-        last_row = rows.last
-        
-        total_revenue = @container.total_revenue
-        if last_row.total_revenue.to_i != 0
-          total_revenue = total_revenue - last_row.total_revenue
-        end
-        
-        total_orders = @container.number_of_orders
-        if last_row.total_shopify_orders.to_i != 0
-          total_orders = total_orders - last_row.total_shopify_orders
-        end
-        
-        total_fulfillment = @container.total_fulfillment_costs
-        if last_row.fulfillment.to_i != 0
-          total_fulfillment = total_fulfillment - last_row.fulfillment
-        end
+        total_revenue = adjusted_revenue( last_row.total_revenue, @container.total_revenue )
+        total_orders = adjusted_orders( last_row.total_shopify_orders, @container.number_of_orders )
+        total_fulfillment = adjusted_fulfillment( last_row.fulfillment, @container.total_fulfillment_costs )
         
         @client.create(
           {
@@ -97,6 +63,7 @@ class Run
             :'Refunds in Shopify' => @container.refunds,
           }
         )
+        }
       ensure
         @wrap.browser.close if @wrap.browser.is_open?
       end
@@ -104,4 +71,74 @@ class Run
       $headless.destroy if !$headless.blank?
     end
   end
+  
+  
+  ## Not scraped sheet values
+  
+  def date
+    # basic 2018-05-21 style
+    Date.today.strftime( '%Y-%m-%d' )
+  end
+  
+  def time
+    # Just the hour, zero-padded
+    DateTime.today.strftime( '%H' )
+  end
+  
+  def row_name
+    # date plus hour
+    "#{ date } #{ time }"
+  end
+  
+  def day_of_week
+    Date.today.strftime( '%A' )
+  end
+  
+  # @TODO set to a variable that can be adjusted
+  def grouping    
+    'D1'
+  end
+  
+  
+  ## Adjustments
+  
+  # @TODO set to a variable that can be adjusted
+  def adjustment_sheet_name
+    '2018-05 daily adjustments'
+  end
+  
+  def last_row_method( client = nil, the_adjustment_sheet_name = nil )
+    client = @client if client.nil?
+    the_adjustment_sheet_name = adjustment_sheet_name if the_adjustment_sheet_name.nil?
+    
+    rows = client.read( 
+    search: { Date: date },
+    sheet: adjustment_sheet_name
+    )
+    
+    rows.last
+  end
+  
+  def last_row( client = nil )
+    @last_row ||= last_row_method( client )
+  end
+  
+  def adjusted_value( adjusted_value, og_total_value )
+    if adjusted_value.to_i != 0
+      og_total_value -= adjusted_value
+    end
+    og_total_value
+  end
+  
+  def adjusted_revenue( adjusted_revenue, total_revenue )
+    adjusted_value( adjusted_revenue, total_revenue )
+  end
+  
+  def adjusted_number_of_orders( adjusted_orders, total_orders )
+    adjusted_value( adjusted_orders, total_orders )
+  end
+  
+  def adjusted_fulfillment( adjusted_fulfillment, total_fulfillment )
+    adjusted_value( adjusted_fulfillment, total_fulfillment )
+  end  
 end
