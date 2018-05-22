@@ -5,7 +5,7 @@ class OrderMetricsProfitAnalysis < Parent
   end
   
   def single
-    @container = Hashie:Mash.new
+    @container = Hashie::Mash.new
     
     @container.number_of_orders = nil
     @container.revenue = nil

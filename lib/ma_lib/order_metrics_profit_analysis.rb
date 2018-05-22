@@ -72,7 +72,7 @@ module MA
       # example: 5/20/2018 aka M/D/YYYY
       todays_date_formatted = Date.today.strftime( '%-m/%-d/%Y' )
       full_matching_text = "#{ todays_date_formatted } - #{ todays_date_formatted }"
-      date_range_actual_dates_element.attribute_value == full_matching_text
+      date_range_actual_dates_element.attribute_value( :value ) == full_matching_text
     end
     
     def date_range_picker_picker_open
@@ -248,8 +248,7 @@ module MA
     ## Ad spend
     
     def filter_ad_spend_element
-      # @browser.button( text: 'Filter Ad Spend' )
-      @browser.button( data_toggle: 'collapse', text: 'Filter Ad Spend ' )
+      @browser.button( visible_text: 'Filter Ad Spend' )
     end
     
     def view_specific_ad_spend_accounts
@@ -268,7 +267,7 @@ module MA
     end
     
     def specific_ad_spend_account_amount_element( name )
-      filter_ad_spend_element.parent.span( visible_text: name ).parent.span( class: 'spend-indicator' )
+      filter_ad_spend_element.parent.span( visible_text: name ).parent.parent.span( class: 'spend-indicator' )
     end
   end
 end
