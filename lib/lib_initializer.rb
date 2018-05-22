@@ -1,8 +1,5 @@
-require_relative 'helpers/monkeypatch_ruby_basics.rb'
-# doesn't fit anywhere
-require_relative 'helpers/monkeypatch-overall.rb'
-
-require_relative 'watir_base/watir_base_initializer.rb'
+require_relative 'base_helpers/initializer.rb'
+require_relative 'base_watir/initializer.rb'
 
 # All the ma_lib files initialized from this file
 require_relative 'ma_lib/initializer.rb'
