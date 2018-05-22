@@ -32,13 +32,11 @@ class Run
         @login = Login.new( @wrap )
         @pa = OrderMetricsProfitAnalysis.new( @wrap )
         
-        Pry::rescue{
         login_result = @login.login
         
         @container = @pa.run
         
         result = sheet_shiz( @container )
-        }
       ensure
         @wrap.browser.close if @wrap.browser.is_open?
       end
