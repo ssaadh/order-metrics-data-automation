@@ -63,6 +63,7 @@ class OrderMetricsProfitAnalysis < Parent
     @browser.refresh
     
     result = @lib.on_and_loaded_profit_analysis?
+    @lib.data_updating_gear_element.wait_while_present
     # dno
     sleep 5 if result
     
