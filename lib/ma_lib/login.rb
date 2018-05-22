@@ -69,7 +69,7 @@ module MA
     
     ## Verifying
     
-    # check up to a few diff ways to see if logged in    
+    # check up to a few diff ways to see if logged in
     def logged_in?
       if !@browser.url.match( 'app.ordermetrics.io' )
         return false

@@ -22,7 +22,7 @@ class Login < Parent
     
     @lib.shopify_login_page_wait
     @lib.shopify_login_email_element.set( Rails.application.credentials.shopify_user )
-    @lib.shopify_login_password_element.set( Rails.application.credentials.shopify_pass )    
+    @lib.shopify_login_password_element.set( Rails.application.credentials.shopify_pass )
     @lib.shopify_login_button_element.click
     
     @lib.logged_in?    
