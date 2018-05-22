@@ -36,33 +36,8 @@ class Run
         login_result = @login.login
         
         @container = @pa.run
-                
-        # @TODO have the API url somewhere that can be changed without version controlled code
-        @client = Sheetsu::Client.new( 'e317450b7654' )
         
-        total_revenue = adjusted_revenue( last_row.total_revenue, @container.total_revenue )
-        total_orders = adjusted_orders( last_row.total_shopify_orders, @container.number_of_orders )
-        total_fulfillment = adjusted_fulfillment( last_row.fulfillment, @container.total_fulfillment_costs )
-        
-        @client.create(
-          {
-            Name: name,
-            Grouping: grouping,
-            Date: date,
-            :'Day of Week' => day_of_week,
-            Time: time,
-            
-            :'Total Revenue' => total_revenue,
-            :'Total Shopify Orders' => total_orders,
-            :'Spend Fomo1' => @container.ad_account_1,
-            :'Spend Fomo2' => @container.ad_account_2,
-            :'Spend Fomo4' => @container.ad_account_4,
-            Spend: @container.ad_spend,
-            Fulfillment: total_fulfillment,
-            Fees: @container.transaction_fees,
-            :'Refunds in Shopify' => @container.refunds,
-          }
-        )
+        result = sheet_shiz( @container )
         }
       ensure
         @wrap.browser.close if @wrap.browser.is_open?
@@ -70,6 +45,48 @@ class Run
     ensure
       $headless.destroy if !$headless.blank?
     end
+  end
+  
+  def client
+    # @TODO have the API url somewhere that can be changed without version controlled code
+    # url = '2964c22831ee'
+    url = 'e317450b7654'
+    @client ||= Sheetsu::Client.new( url )
+  end
+  
+  def sheet_shiz( container, sheet_client = nil )
+    sheet_client = client if sheet_client.nil?
+    
+    # well this isn't pretty
+    total_revenue = container.total_revenue
+    total_orders = container.number_of_orders
+    total_fulfillment = container.total_fulfillment_costs
+    if !last_row.nil?
+      total_revenue = adjusted_revenue( last_row.total_revenue, container.total_revenue )
+      total_orders = adjusted_orders( last_row.total_shopify_orders, container.number_of_orders )
+      total_fulfillment = adjusted_fulfillment( last_row.fulfillment, container.total_fulfillment_costs )
+    end
+    
+    sheet_client.create(
+      {
+        Name: row_name,
+        Grouping: grouping,
+        Date: date,
+        :'Day of Week' => day_of_week,
+        Time: row_time,
+
+        :'Total Revenue' => total_revenue,
+        :'Total Shopify Orders' => total_orders,
+        :'Spend Fomo1' => container.ad_account_1,
+        :'Spend Fomo2' => container.ad_account_2,
+        :'Spend Fomo4' => container.ad_account_4,
+        Spend: container.ad_spend,
+        Fulfillment: total_fulfillment,
+        Fees: container.transaction_fees,
+        :'Refunds in Shopify' => container.refunds,
+        :'Unique Visitors' => container.unique_visitors,
+      }
+    )
   end
   
   
