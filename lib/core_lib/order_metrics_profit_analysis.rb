@@ -14,11 +14,11 @@ class OrderMetricsProfitAnalysis < Parent
     @container.shipping = nil
     @container.transaction_fees = nil
     @container.refunds = nil
-    @container.avg_order_value = nil
-    @container.avg_order_profit = nil
-    @container.ad_spend_per_order = nil
-    @container.value_of_a_customer = nil
-    @container.purchase_frequency = nil
+    # @container.avg_order_value = nil
+    # @container.avg_order_profit = nil
+    # @container.ad_spend_per_order = nil
+    # @container.value_of_a_customer = nil
+    # @container.purchase_frequency = nil
     
     @container.total_fulfillment_costs = nil
     @container.total_revenue = nil
