@@ -251,8 +251,26 @@ module MA
       @browser.button( visible_text: 'Filter Ad Spend' )
     end
     
+    def ad_spend_expanded_element      
+      # @browser.div( class: 'main-collapse', aria_expanded: 'true' )
+      filter_ad_spend_element.parent.div( class: 'main-collapse' )
+    end
+    
+    def is_ad_spend_expanded?
+      ad_spend_expanded_element.attribute_value( 'aria-expanded' ) == 'true'
+    end
+    
     def view_specific_ad_spend_accounts
+      filter_ad_spend_element.focus
       filter_ad_spend_element.click
+      
+      if !is_ad_spend_expanded?
+        # try again
+        sleep 1
+        filter_ad_spend_element.focus
+        filter_ad_spend_element.click
+      end
+      
       @browser.span( class: 'spend-indicator' ).wait_until_present
     end
     
