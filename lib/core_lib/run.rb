@@ -82,7 +82,11 @@ class Run
   
   def time
     # Just the hour, zero-padded
-    DateTime.today.strftime( '%H' )
+    DateTime.now.strftime( '%H' )
+  end
+  
+  def row_time
+    "#{ time }:00"
   end
   
   def row_name
@@ -95,7 +99,7 @@ class Run
   end
   
   # @TODO set to a variable that can be adjusted
-  def grouping    
+  def grouping
     'D1'
   end
   
@@ -107,20 +111,24 @@ class Run
     '2018-05 daily adjustments'
   end
   
-  def last_row_method( client = nil, the_adjustment_sheet_name = nil )
-    client = @client if client.nil?
+  def last_row_method( sheet_client = nil, the_adjustment_sheet_name = nil )
+    sheet_client = client if sheet_client.nil?
     the_adjustment_sheet_name = adjustment_sheet_name if the_adjustment_sheet_name.nil?
     
-    rows = client.read( 
-    search: { Date: date },
-    sheet: adjustment_sheet_name
-    )
+    begin
+      rows = sheet_client.read(
+      search: { Date: date },
+      sheet: adjustment_sheet_name
+      )
+    rescue Sheetsu::NotFoundError
+      return nil
+    end
     
     rows.last
   end
   
-  def last_row( client = nil )
-    @last_row ||= last_row_method( client )
+  def last_row( sheet_client = nil )
+    @last_row ||= last_row_method( sheet_client )
   end
   
   def adjusted_value( adjusted_value, og_total_value )
