@@ -49,7 +49,7 @@ class OrderMetricsProfitAnalysis < Parent
     @lib.on_and_loaded_profit_analysis?
     
     sleep 1
-        
+    
     if !@lib.check_for_todays_date?
       @lib.date_range_picker_element.click
       date_range_picker_today_element.wait_until_present
@@ -60,16 +60,16 @@ class OrderMetricsProfitAnalysis < Parent
     # dno
     sleep 5
     
-    @browser.refresh      
+    @browser.refresh
     
-    result = @lib.on_and_loaded_profit_analysis?    
+    result = @lib.on_and_loaded_profit_analysis?
     # dno
     sleep 5 if result
     
     result
   end
   
-  def grab_data( container )        
+  def grab_data( container )
     container.number_of_orders = @lib.number_of_orders
     container.revenue = @lib.revenue
     # container.discounts = @lib.discounts
@@ -81,6 +81,8 @@ class OrderMetricsProfitAnalysis < Parent
     container.total_fulfillment_costs = @lib.total_fulfillment_costs
     container.total_revenue = @lib.total_revenue
     # container.profit = nil = @lib.profit
+    
+    container.unique_visitors = @lib.unique_visitors
     
     container.ad_spend = @lib.ad_spend
     
