@@ -6,27 +6,10 @@ class Run
     @base_logger = Rails.logger.loop
   end
   
-  def official_initial( display_number = nil )
-    @base_logger.info 'BEGIN - Run - initial'
-    
-    $headless = nil
-    if GeneralHelpers.host_os == :linux
-      unless display_number.nil?
-        $headless = Headless.new( display: display_number )
-        $headless.start
-      end
-    end
-    
-    @wrap = TheBasics.new( :chrome, $headless )
-    
-    @base_logger.info 'END - Run - initial'
-    
-    return $headless, @wrap
-  end
-  
   def go( display_number = nil )
-    display_number = rand( 100..999 ) if display_number.nil?
-    $headless, @wrap = official_initial( display_number )
+    @base_logger.info 'BEGIN - Run - go'
+    setup = Setup.new
+    $headless, @wrap = setup.default( display_number )
     begin
       begin
         @login = Login.new( @wrap )
@@ -43,6 +26,8 @@ class Run
     ensure
       $headless.destroy if !$headless.blank?
     end
+    @base_logger.info 'END - Run - go'
+    result
   end
   
   def client

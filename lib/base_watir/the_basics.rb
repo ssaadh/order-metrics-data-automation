@@ -28,7 +28,7 @@ class TheBasics
   
   
   # Uh going with using opts. So the only thing so far is possibly having stuff_location, lol.
-  def initialize( browser = :firefox, headless = nil, user_agent = {}, location_info = {}, opts = {} )
+  def initialize( browser = :firefox, headless = nil, user_agent = {}, location_info = {}, opts = {}, override = nil )
     # Does this work lol?
     @options = opts
     
@@ -37,7 +37,6 @@ class TheBasics
     
     @headless = headless
     
-    options[ :browser ] ||= browser
     #options[ :agent ] ||= device    
     
     # proxy
@@ -60,14 +59,20 @@ class TheBasics
     
     ##
     
-    initial_browser_setup
-    
-    internal_location_setup( location_info )
+    # already did the browser creation
+    if override.class == Watir::Browser      
+      @browser = override
+    else
+      options[ :browser ] ||= browser
+      initial_browser_setup
+      
+      internal_location_setup( location_info )
         
-    device_setup_result = internal_device_setup( user_agent )
+      device_setup_result = internal_device_setup( user_agent )
     
-    #
-    @browser = finalize_browser_setup
+      #
+      @browser = finalize_browser_setup
+    end
     
     # Have the browser viewport be smaller like a phone
     # @browser has to already be made

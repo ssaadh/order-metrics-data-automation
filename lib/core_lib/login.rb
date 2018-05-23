@@ -3,8 +3,21 @@ class Login < Parent
     super( wrap )
     @lib = MA::Login.new( wrap )
   end
-  
+    
   def login
+    # login_directly
+    login_profile
+  end
+  
+  def login_profile
+    @wrap.go_to_url( @lib.app_url )
+    
+    # not logged in
+    result = login_directly if @browser.url.match( 'login' )            
+  end
+  
+  # cookies don't work
+  def login_cookies
     @wrap.go_to_url( @lib.app_url )
     if !File.file?( cookie_file ) && !File.read( cookie_file ).blank?
       cookies_load
@@ -52,7 +65,7 @@ class Login < Parent
   end
   
   def cookie_file
-    "#{ Rails.root }/cookie_file.txt"
+    "#{ Rails.root }/browser/cookie_file.txt"
   end
   
   def shopify_subdomain

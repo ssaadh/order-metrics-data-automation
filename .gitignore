@@ -30,4 +30,4 @@
 /config/master.key
 
 # for cookie file
-cookie_file.txt
+# /browser/*
