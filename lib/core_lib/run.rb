@@ -50,6 +50,11 @@ class Run
     @client ||= Sheetsu::Client.new( url )
   end
   
+  def cleanse_tile_text( text )
+    cleansed_text = text.sub( '$', '' )
+    cleansed_text.sub( ',', '' )
+  end
+  
   def sheet_shiz( container, sheet_client = nil )
     sheet_client = client if sheet_client.nil?
     
@@ -58,9 +63,9 @@ class Run
     total_orders = container.number_of_orders
     total_fulfillment = container.total_fulfillment_costs
     if !last_row.nil?
-      total_revenue = adjusted_revenue( last_row.total_revenue, container.total_revenue )
-      total_orders = adjusted_orders( last_row.total_shopify_orders, container.number_of_orders )
-      total_fulfillment = adjusted_fulfillment( last_row.fulfillment, container.total_fulfillment_costs )
+      total_revenue = adjusted_revenue( cleanse_tile_text( last_row[ 'Total Revenue' ] ).to_i, container.total_revenue )
+      total_orders = adjusted_number_of_orders( cleanse_tile_text( last_row[ 'Total Shopify Orders' ] ).to_i, container.number_of_orders )
+      total_fulfillment = adjusted_fulfillment( cleanse_tile_text( last_row[ 'Fulfillment' ] ).to_i, container.total_fulfillment_costs )
     end
     
     sheet_client.create(
@@ -130,7 +135,7 @@ class Run
     begin
       rows = sheet_client.read(
       search: { Date: date },
-      sheet: adjustment_sheet_name
+      sheet: "#{ adjustment_sheet_name }",
       )
     rescue Sheetsu::NotFoundError
       return nil
