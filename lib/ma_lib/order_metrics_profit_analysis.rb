@@ -27,7 +27,7 @@ module MA
       end
       
       true
-    end
+    end          
     
       def profit_analysis_h2
         @browser.h2( visible_text: 'Profit Analysis' )
@@ -90,6 +90,11 @@ module MA
     
     
     ## Loading issue/delay/refresh
+    
+    def big_gears_element
+      # <div class="row loading" style="height: 200px;"></div>
+      @browser.div( class: 'loading', class: 'row' )
+    end
     
     def data_updating_element
       @browser.div( id: 'loading-dialog' )
