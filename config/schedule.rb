@@ -29,19 +29,24 @@ set :output, 'log/cron_log.log'
 # Main app stuff
 ##
 
-# Irregular times - separated by two hours
-every '1 1,3,5,7,9,22 * * *' do
+# early hours - hourly
+every '0 1,2,3,4,5,6 * * *' do
   rake 'core:run'
 end
 
 # try to get the last one for the day. 3 min before midnight for ample time to do everything
 # @TODO reduce to 2 min if can be sure 3 min is more than enough.
-every '57 23 * * *' do
+every '58 23 * * *' do
   rake 'core:run'
 end
 
-# 10 am to 9 pm, hourly
-every '1 10,11,12,13,14,15,16,17,18,19,20,21 * * *' do
+# 8 am to 11 pm, every 30 min - at hour mark
+every '0 7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * *' do
+  rake 'core:run'
+end
+
+# 8 am to 11 pm, every 30 min - at 30 min mark
+every '30 7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22 * * *' do
   rake 'core:run'
 end
 

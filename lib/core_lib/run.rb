@@ -97,11 +97,12 @@ class Run
   
   def time
     # Just the hour, zero-padded
-    DateTime.now.strftime( '%H' )
+    # nvm, now the minutes too. would like it to be 00 or 30, but will see if it goes past a minute
+    DateTime.now.strftime( '%H:%M' )
   end
   
   def row_time
-    "#{ time }:00"
+    "#{ time }"
   end
   
   def row_name
