@@ -25,7 +25,7 @@ class Run
   end
   
   def go( display_number = nil )
-    display_number = rand( 11..99 ) if display_number.nil?
+    display_number = rand( 100..999 ) if display_number.nil?
     $headless, @wrap = official_initial( display_number )
     begin
       begin
@@ -46,9 +46,7 @@ class Run
   end
   
   def client
-    # @TODO have the API url somewhere that can be changed without version controlled code
-    # url = '2964c22831ee'
-    url = 'e317450b7654'
+    url = ENV[ 'sheetsu_api_url_id' ]
     @client ||= Sheetsu::Client.new( url )
   end
   
@@ -114,17 +112,15 @@ class Run
     Date.today.strftime( '%A' )
   end
   
-  # @TODO set to a variable that can be adjusted
   def grouping
-    'D1'
+    ENV[ 'grouping' ]
   end
   
   
   ## Adjustments
   
-  # @TODO set to a variable that can be adjusted
   def adjustment_sheet_name
-    '2018-05 daily adjustments'
+    ENV[ 'adjustment_sheet' ]
   end
   
   def last_row_method( sheet_client = nil, the_adjustment_sheet_name = nil )

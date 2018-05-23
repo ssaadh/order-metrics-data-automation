@@ -102,7 +102,7 @@ gem 'user_agent_parser'
 gem 'hashie'
 
 # env variables
-# gem 'dotenv-rails'
+gem 'dotenv-rails'
 
 # logging
 gem 'multi_logger'

@@ -29,6 +29,6 @@ class Login < Parent
   end
   
   def shopify_subdomain
-    'fomosupplyco'
+    ENV[ 'shopify_subdoman' ]
   end
 end
