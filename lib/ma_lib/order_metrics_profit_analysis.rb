@@ -16,12 +16,12 @@ module MA
         return false
       end
       
-      profit_analysis_h2.wait_until_present
+      profit_analysis_h2.click
       if !profit_analysis_h2.exist_pres_vis?
         return false
       end
       
-      revenue_watir.wait_until_present
+      revenue_watir.click
       if !revenue_watir.exist_pres_vis?
         return false
       end
