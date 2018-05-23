@@ -6,14 +6,14 @@ class Login < Parent
   
   def login
     @wrap.go_to_url( @lib.app_url )
-    if !File.read( cookie_file ).blank_zero?
+    if !File.file?( cookie_file ) && !File.read( cookie_file ).blank?
       cookies_load
     end
     
     result = @wrap.go_to_url( @lib.app_url )
     
     # didn't login
-    if @browser.url.match( 'login' )    
+    if @browser.url.match( 'login' )
       result = login_directly
       cookies_save
     end

@@ -13,7 +13,7 @@ namespace :core do
 	task :run_test => :environment do
     Rails.logger.routine_tasks.info 'BEGIN run_test'
     active_jerb = Run.new
-    Pry::Rescue {
+    Pry::rescue {
       active_jerb.go
     }
     Rails.logger.routine_tasks.info 'END run_test'
