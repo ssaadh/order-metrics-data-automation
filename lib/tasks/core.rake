@@ -5,7 +5,7 @@ namespace :core do
 	task :run => :environment do
     Rails.logger.routine_tasks.info 'BEGIN run'
     active_jerb = Run.new
-    run.go
+    active_jerb.go
     Rails.logger.routine_tasks.info 'END run'
 	end
   
@@ -13,7 +13,7 @@ namespace :core do
 	task :run_test => :environment do
     Rails.logger.routine_tasks.info 'BEGIN run'
     active_jerb = Run.new
-    run.go_test
+    active_jerb.go_test
     Rails.logger.routine_tasks.info 'END run'
 	end
 end
