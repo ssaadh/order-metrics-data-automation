@@ -11,7 +11,7 @@ module MA
     ## Order Metrics Profit Analysis Intro Shiz
     
     def on_and_loaded_profit_analysis?
-      profit_analysis_link_element.wait_until_present
+      profit_analysis_link_element.focus
       if !profit_analysis_link_element.exist_pres_vis?
         return false
       end
@@ -77,7 +77,7 @@ module MA
     
     def date_range_picker_picker_open
       date_range_element.click
-      date_range_picker_ranges_element.wait_until_present
+      date_range_picker_ranges_element.focus
     end
     
     def date_range_picker_pick_today
@@ -271,7 +271,7 @@ module MA
         filter_ad_spend_element.click
       end
       
-      @browser.span( class: 'spend-indicator' ).wait_until_present
+      @browser.span( class: 'spend-indicator' ).focus
     end
     
     def ad_spend_clean( text )

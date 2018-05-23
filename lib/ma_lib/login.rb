@@ -17,7 +17,7 @@ module MA
     ## Order Metrics login
     
     def login_page_wait
-      log_in_with_shopify_button_element.wait_until_present
+      log_in_with_shopify_button_element.focus
     end
     
     def log_in_with_shopify_button_element
@@ -30,7 +30,7 @@ module MA
     end
     
     def shopify_store_name_popover_wait
-      enter_shopify_store_name_popover_element.wait_until_present
+      enter_shopify_store_name_popover_element.focus
     end
     
     def enter_shopify_store_name_field_element
@@ -46,7 +46,7 @@ module MA
     ## Shopify Login
 
     def shopify_login_page_wait
-      shopify_login_email_element.wait_until_present
+      shopify_login_email_element.focus
     end
     
     def shopify_login_page_loaded?
@@ -75,7 +75,7 @@ module MA
         return false
       end
       
-      profit_analysis_link_element.wait_until_present
+      profit_analysis_link_element.focus
       if !profit_analysis_link_element.exist_pres_vis?
         return false
       end
