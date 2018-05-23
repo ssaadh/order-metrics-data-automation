@@ -52,7 +52,7 @@ class OrderMetricsProfitAnalysis < Parent
     
     if !@lib.check_for_todays_date?
       @lib.date_range_picker_element.click
-      date_range_picker_today_element.wait_until_present
+      date_range_picker_today_element.focus
       date_range_picker_today_element.click
     end
     
