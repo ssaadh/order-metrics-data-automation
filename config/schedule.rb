@@ -34,8 +34,8 @@ every '0 1,2,3,4,5,6 * * *' do
   rake 'core:run'
 end
 
-# try to get the last one for the day. 3 min before midnight for ample time to do everything
-# @TODO reduce to 2 min if can be sure 3 min is more than enough.
+# try to get the last one for the day. 2 min before midnight for enough time to do everything. As it normally takes a minute or slightly more.
+# could potentially reduce to 1 min, but that could possibly cause a few seconds into next day if system is slow/bogged down, if logging in needs to happen, internet is slow, service is slow, et al.
 every '58 23 * * *' do
   rake 'core:run'
 end

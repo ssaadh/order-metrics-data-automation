@@ -29,5 +29,5 @@
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
-# for cookie file
-# /browser/*
+# for browser profiles and cookie files
+/browser/*
