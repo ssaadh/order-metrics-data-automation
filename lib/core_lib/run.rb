@@ -47,11 +47,17 @@ class Run
     total_revenue = container.total_revenue
     total_orders = container.number_of_orders
     total_fulfillment = container.total_fulfillment_costs
-    if !last_row.nil?
-      total_revenue = adjusted_revenue( cleanse_tile_text( last_row[ 'Total Revenue' ] ).to_i, container.total_revenue )
-      total_orders = adjusted_number_of_orders( cleanse_tile_text( last_row[ 'Total Shopify Orders' ] ).to_i, container.number_of_orders )
-      total_fulfillment = adjusted_fulfillment( cleanse_tile_text( last_row[ 'Fulfillment' ] ).to_i, container.total_fulfillment_costs )
+    if !adjustment_last_row.nil?
+      total_revenue = adjusted_revenue( cleanse_tile_text( adjustment_last_row[ 'Total Revenue' ] ).to_i, container.total_revenue )
+      total_orders = adjusted_number_of_orders( cleanse_tile_text( adjustment_last_row[ 'Total Shopify Orders' ] ).to_i, container.number_of_orders )
+      total_fulfillment = adjusted_fulfillment( cleanse_tile_text( adjustment_last_row[ 'Fulfillment' ] ).to_i, container.total_fulfillment_costs )
     end
+    
+    
+    ## Formulas [for now]
+    profit = total_revenue - ( total_fulfillment_costs + container.ad_spend + container.transaction_fees )
+    roi = profit / container.ad_spend * 100
+    conversion_rate = total_orders / container.unique_visitors * 100
     
     sheet_client.create(
       {
@@ -71,6 +77,9 @@ class Run
         Fees: container.transaction_fees,
         :'Refunds in Shopify' => container.refunds,
         :'Unique Visitors' => container.unique_visitors,
+        :'The Profit' => profit,
+        ROI: roi,
+        :'Conversion Rate' => conversion_rate
       }
     )
   end
@@ -113,14 +122,12 @@ class Run
     ENV[ 'adjustment_sheet' ]
   end
   
-  def last_row_method( sheet_client = nil, the_adjustment_sheet_name = nil )
+  def previous_row_method( sheet_client = nil )
     sheet_client = client if sheet_client.nil?
-    the_adjustment_sheet_name = adjustment_sheet_name if the_adjustment_sheet_name.nil?
     
     begin
       rows = sheet_client.read(
-      search: { Date: date },
-      sheet: "#{ adjustment_sheet_name }",
+        search: { Date: date }
       )
     rescue Sheetsu::NotFoundError
       return nil
@@ -129,8 +136,29 @@ class Run
     rows.last
   end
   
-  def last_row( sheet_client = nil )
-    @last_row ||= last_row_method( sheet_client )
+  def second_previous_row_method
+    
+  end
+  
+  
+  def adjustment_last_row_method( sheet_client = nil, the_adjustment_sheet_name = nil )
+    sheet_client = client if sheet_client.nil?
+    the_adjustment_sheet_name = adjustment_sheet_name if the_adjustment_sheet_name.nil?
+    
+    begin
+      rows = sheet_client.read(
+        search: { Date: date },
+        sheet: "#{ adjustment_sheet_name }",
+      )
+    rescue Sheetsu::NotFoundError
+      return nil
+    end
+    
+    rows.last
+  end
+  
+  def adjustment_last_row( sheet_client = nil )
+    @last_row ||= adjustment_last_row_method( sheet_client )
   end
   
   def adjusted_value( adjusted_value, og_total_value )
