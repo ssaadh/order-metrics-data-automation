@@ -22,7 +22,7 @@ class OrderMetricsProfitAnalysis < Parent
     
     @container.total_fulfillment_costs = nil
     @container.total_revenue = nil
-    @container.profit = nil        
+    @container.profit = nil
     
     @container.ad_spend = nil
     

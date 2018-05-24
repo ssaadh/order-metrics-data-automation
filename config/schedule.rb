@@ -23,7 +23,8 @@
 # wheneverize .
 # whenever --update-crontab
 
-set :output, 'log/cron_log.log'
+# set :output, 'log/cron_log.log'
+set :output, "#{ Rails.root }/log/cron_log.log"
 
 ##
 # Main app stuff

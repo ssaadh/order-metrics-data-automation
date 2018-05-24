@@ -93,7 +93,7 @@ module MA
     
     def big_gears_element
       # <div class="row loading" style="height: 200px;"></div>
-      @browser.div( class: 'loading', class: 'row' )
+      @browser.div( class: 'row loading' )
     end
     
     def data_updating_element
