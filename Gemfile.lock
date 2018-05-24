@@ -1,3 +1,12 @@
+GIT
+  remote: https://github.com/martijnrusschen/pushover.git
+  revision: b5b4123917b66f1b5e956d3c5c3766b2e70c57ea
+  specs:
+    pushover (1.0.4)
+      bini (= 0.7.0)
+      httparty (= 0.16.2)
+      yajl-ruby (= 1.4.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -51,6 +60,8 @@ GEM
     bindex (0.5.0)
     binding_of_caller (0.8.0)
       debug_inspector (>= 0.0.1)
+    bini (0.7.0)
+      sys-proctable
     bootsnap (1.3.0)
       msgpack (~> 1.0)
     builder (3.2.3)
@@ -95,6 +106,8 @@ GEM
       activesupport (>= 4.2.0)
     hashie (3.5.7)
     headless (2.3.1)
+    httparty (0.16.2)
+      multi_xml (>= 0.5.2)
     i18n (1.0.1)
       concurrent-ruby (~> 1.0)
     interception (0.5)
@@ -128,6 +141,7 @@ GEM
     multi_json (1.13.1)
     multi_logger (0.1.0)
       railties
+    multi_xml (0.6.0)
     multipart-post (2.0.0)
     nio4r (2.3.1)
     nokogiri (1.8.2)
@@ -215,6 +229,8 @@ GEM
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
     sqlite3 (1.3.13)
+    sys-proctable (1.2.0)
+      ffi
     thor (0.20.0)
     thread_safe (0.3.6)
     tilt (2.0.8)
@@ -241,6 +257,7 @@ GEM
       chronic (>= 0.6.3)
     xpath (3.0.0)
       nokogiri (~> 1.8)
+    yajl-ruby (1.4.0)
 
 PLATFORMS
   ruby
@@ -266,6 +283,7 @@ DEPENDENCIES
   pry-rescue
   pry-stack_explorer
   puma (~> 3.11)
+  pushover!
   rails (~> 5.2.0)
   sass-rails (~> 5.0)
   selenium-webdriver

@@ -68,7 +68,7 @@ group :test do
   gem 'capybara', '>= 2.15', '< 4.0'
   gem 'selenium-webdriver'
   # Easy installation and use of chromedriver to run system tests with Chrome
-  gem 'chromedriver-helper'
+  # gem 'chromedriver-helper'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
@@ -110,7 +110,7 @@ gem 'multi_logger'
 # email
 # gem 'sendgrid'
 # notifications
-# gem 'pushover', github: 'martijnrusschen/pushover'
+gem 'pushover', github: 'martijnrusschen/pushover'
 
 # automation gluing
 # for now since it'll be faster and easier, but pointlessly have to pay for something that isn't needed when there's more time. Plus 1000 row limit per sheet

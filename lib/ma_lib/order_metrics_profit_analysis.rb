@@ -16,12 +16,14 @@ module MA
         return false
       end
       
-      profit_analysis_h2.click
+      # in case this gives an error too with click
+      profit_analysis_h2.focus
       if !profit_analysis_h2.exist_pres_vis?
         return false
       end
       
-      revenue_watir.click
+      # this gave an error with click. hopefully won't for focus
+      revenue_watir.focus
       if !revenue_watir.exist_pres_vis?
         return false
       end
