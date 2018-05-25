@@ -36,8 +36,9 @@ class Run
         @pa = OrderMetricsProfitAnalysis.new( @wrap )
         
         login_result = @login.login
-        
+        @base_logger.info 'BEGIN - go - OrderMetricsProfitAnalysis run'
         @container = @pa.run
+        @base_logger.info 'END - go - OrderMetricsProfitAnalysis run'
         total_adjusted = total_adjusted_amounts( @container )
     
         @formulas = formulas_replacement( total_adjusted, @container )
@@ -103,9 +104,6 @@ class Run
   end
   
   def pushover_notification( total_adjusted, container, formulas, pushover_client = nil )    
-    # title =
-    # message =
-    # Pushover.notification( title: title, message: message )
   end
   
   
