@@ -124,9 +124,9 @@ class Run
       message << pushover_message_line( 'Last Check Profit', formulas.last_check.profit )
       message << pushover_message_line( 'Last Check ROI', formulas.last_check.roi, nil, '%' )
       message << "\n"
-      message << pushover_message_line( 'Last Check Spend', formulas.second_last_check.spend )
-      message << pushover_message_line( 'Last Check Profit', formulas.second_last_check.profit )
-      message << pushover_message_line( 'Last Check ROI', formulas.second_last_check.roi, nil, '%' )
+      message << pushover_message_line( 'Last 2 Check Spend', formulas.second_last_check.spend )
+      message << pushover_message_line( 'Last 2 Check Profit', formulas.second_last_check.profit )
+      message << pushover_message_line( 'Last 2 Check ROI', formulas.second_last_check.roi, nil, '%' )
     end
   
     def pushover_message_line( text_header, text, before_text = '$', after_text = nil )
