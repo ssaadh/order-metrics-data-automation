@@ -104,7 +104,35 @@ class Run
   end
   
   def pushover_notification( total_adjusted, container, formulas, pushover_client = nil )    
+    title = pushover_title( formulas.last_check.profit, formulas.second_last_check.profit )
+    message = pushover_message( adjusted_totals.revenue, container.ad_spend, formulas )    
+    Pushover.notification( title: title, message: message )
   end
+  
+    def pushover_title( last_check_profit, second_last_check_profit )
+      "New numbers at #{ time }. Profit since last is $#{ formulas.last_check.profit } and from 2 numbers ago is $#{ formulas.second_last_check.profit }. Look at msg for full major numbers."
+    end
+  
+    def pushover_message( revenue, ad_spend, formulas )
+      message = ''
+      message << pushover_message_line( 'Overall Time', time )
+      message << pushover_message_line( 'Overall Revenue', adjusted_totals.revenue )
+      message << pushover_message_line( 'Overall Spend', container.ad_spend )
+      message << pushover_message_line( 'Overall Profit', formulas.profit )
+      message << "\n"
+      message << pushover_message_line( 'Last Check Spend', formulas.last_check.spend )
+      message << pushover_message_line( 'Last Check Profit', formulas.last_check.profit )
+      message << pushover_message_line( 'Last Check ROI', formulas.last_check.roi )
+      message << "\n"
+      message << pushover_message_line( 'Last Check Spend', formulas.second_last_check.spend )
+      message << pushover_message_line( 'Last Check Profit', formulas.second_last_check.profit )
+      message << pushover_message_line( 'Last Check ROI', formulas.second_last_check.roi )
+    end
+  
+    def pushover_message_line( text_header, text )
+      string = "<b><font color=\"#0000ff\">#{ text_header }:</font></b> #{ text }"
+      string << "\n"
+    end
   
   
   ## Segment out shiz
