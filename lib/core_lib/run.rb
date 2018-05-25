@@ -53,7 +53,7 @@ class Run
       $headless.destroy if !$headless.blank?
     end
     @base_logger.info 'END - Run - go'
-    result_sheet, result_push
+    return result_sheet, result_push
   end
     
     # copy pasted, needed here
@@ -105,33 +105,37 @@ class Run
   
   def pushover_notification( total_adjusted, container, formulas, pushover_client = nil )    
     title = pushover_title( formulas.last_check.profit, formulas.second_last_check.profit )
-    message = pushover_message( adjusted_totals.revenue, container.ad_spend, formulas )    
-    Pushover.notification( title: title, message: message )
+    message = pushover_message( total_adjusted.revenue, container.ad_spend, formulas )    
+    Pushover.notification( title: title, message: message, html: 1 )
   end
   
     def pushover_title( last_check_profit, second_last_check_profit )
-      "New numbers at #{ time }. Profit since last is $#{ formulas.last_check.profit } and from 2 numbers ago is $#{ formulas.second_last_check.profit }. Look at msg for full major numbers."
+      "New numbers at #{ time }. Profit since last is $#{ last_check_profit } and from 2 numbers ago is $#{ second_last_check_profit }. Look at msg for full major numbers."
     end
   
     def pushover_message( revenue, ad_spend, formulas )
       message = ''
-      message << pushover_message_line( 'Overall Time', time )
-      message << pushover_message_line( 'Overall Revenue', adjusted_totals.revenue )
-      message << pushover_message_line( 'Overall Spend', container.ad_spend )
+      message << pushover_message_line( 'Overall Time', time, nil, nil )
+      message << pushover_message_line( 'Overall Revenue', revenue )
+      message << pushover_message_line( 'Overall Spend', ad_spend )
       message << pushover_message_line( 'Overall Profit', formulas.profit )
       message << "\n"
       message << pushover_message_line( 'Last Check Spend', formulas.last_check.spend )
       message << pushover_message_line( 'Last Check Profit', formulas.last_check.profit )
-      message << pushover_message_line( 'Last Check ROI', formulas.last_check.roi )
+      message << pushover_message_line( 'Last Check ROI', formulas.last_check.roi, nil, '%' )
       message << "\n"
       message << pushover_message_line( 'Last Check Spend', formulas.second_last_check.spend )
       message << pushover_message_line( 'Last Check Profit', formulas.second_last_check.profit )
-      message << pushover_message_line( 'Last Check ROI', formulas.second_last_check.roi )
+      message << pushover_message_line( 'Last Check ROI', formulas.second_last_check.roi, nil, '%' )
     end
   
-    def pushover_message_line( text_header, text )
-      string = "<b><font color=\"#0000ff\">#{ text_header }:</font></b> #{ text }"
+    def pushover_message_line( text_header, text, before_text = '$', after_text = nil )
+      before_text = '' if before_text.blank?
+      after_text = '' if after_text.blank?
+      
+      string = "<b><font color=\"#0000ff\">#{ text_header }:</font></b> #{ before_text }#{ text }#{ after_text }"
       string << "\n"
+      string
     end
   
   
@@ -184,22 +188,22 @@ class Run
     
     @formulas = formulas_container
     
-    @formulas.profit = total_adjusted.revenue - ( total_adjusted.fulfillment + container.ad_spend + container.transaction_fees )
-    @formulas.roi = @formulas.profit / container.ad_spend * 100
-    @formulas.conversion_rate = total_adjusted.orders.to_f / container.unique_visitors * 100
+    @formulas.profit = ( '%.2f' % ( total_adjusted.revenue - ( total_adjusted.fulfillment + container.ad_spend + container.transaction_fees ) ) ).to_f
+    @formulas.roi = ( '%.2f' % ( @formulas.profit / container.ad_spend * 100 ) ).to_f
+    @formulas.conversion_rate = ( '%.2f' % ( total_adjusted.orders.to_f / container.unique_visitors * 100 ) ).to_f
     
     if !previous_row.nil?
       @formulas.last_check.spend = container.ad_spend - previous_row[ :spend ]
-      @formulas.last_check.profit = @formulas.profit - previous_row[ :profit ]
-      @formulas.last_check.roi = @formulas.last_check.profit / @formulas.last_check.spend * 100
-      @formulas.last_check.conversion_rate = ( total_adjusted.orders - previous_row[ :orders ] ) / ( container.unique_visitors - previous_row[ :unique_visitors ] ) * 100
+      @formulas.last_check.profit = ( '%.2f' % ( @formulas.profit - previous_row[ :profit ] ) ).to_f
+      @formulas.last_check.roi = ( '%.2f' % ( @formulas.last_check.profit / ( @formulas.last_check.spend + 0.01 ) * 100 ) ).to_f
+      @formulas.last_check.conversion_rate = ( '%.2f' % ( ( total_adjusted.orders - previous_row[ :orders ] ) / ( container.unique_visitors - previous_row[ :unique_visitors ] + 0.01 ) * 100 ) ).to_f
     end
     
     if !second_previous_row.nil?
       @formulas.second_last_check.spend = container.ad_spend - second_previous_row[ :spend ]
-      @formulas.second_last_check.profit = @formulas.profit - second_previous_row[ :profit ]
-      @formulas.second_last_check.roi = @formulas.second_last_check.profit / @formulas.second_last_check.spend * 100
-      @formulas.second_last_check.conversion_rate = ( total_adjusted.orders.to_f - second_previous_row[ :orders ] ) / ( container.unique_visitors.to_f - second_previous_row[ :unique_visitors ] ) * 100
+      @formulas.second_last_check.profit = ( '%.2f' % ( @formulas.profit - second_previous_row[ :profit ] ) ).to_f
+      @formulas.second_last_check.roi = ( '%.2f' % ( @formulas.second_last_check.profit / ( @formulas.second_last_check.spend + 0.01 ) * 100 ) ).to_f
+      @formulas.second_last_check.conversion_rate = ( '%.2f' % ( ( total_adjusted.orders.to_f - second_previous_row[ :orders ] ) / ( container.unique_visitors.to_f - second_previous_row[ :unique_visitors ] + 0.01 ) * 100 ) ).to_f
     end
     
     @formulas
