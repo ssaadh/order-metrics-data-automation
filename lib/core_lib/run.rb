@@ -160,37 +160,30 @@ class Run
     
     @formulas.profit = total_adjusted.revenue - ( total_adjusted.fulfillment + container.ad_spend + container.transaction_fees )
     @formulas.roi = @formulas.profit / container.ad_spend * 100
-    @formulas.conversion_rate = total_adjusted.orders.to_f / container.unique_visitors.to_f * 100
+    @formulas.conversion_rate = total_adjusted.orders.to_f / container.unique_visitors * 100
     
     if !previous_row.nil?
-      @formulas.last_check.spend = container.ad_spend - previous_row[ 'Spend' ]
-      @formulas.last_check.profit = @formulas.profit - previous_row[ 'The Profit' ]
+      @formulas.last_check.spend = container.ad_spend - previous_row[ :spend ]
+      @formulas.last_check.profit = @formulas.profit - previous_row[ :profit ]
       @formulas.last_check.roi = @formulas.last_check.profit / @formulas.last_check.spend * 100
-      @formulas.last_check.conversion_rate = ( total_adjusted.orders.to_f - previous_row[ 'Total Shopify Orders' ].to_f ) / ( container.unique_visitors.to_f - previous_row[ 'Unique Visitors' ].to_f ) * 100
+      @formulas.last_check.conversion_rate = ( total_adjusted.orders - previous_row[ :orders ] ) / ( container.unique_visitors - previous_row[ :unique_visitors ] ) * 100
     end
     
     if !second_previous_row.nil?
-      @formulas.second_last_check.spend = container.ad_spend - second_previous_row[ 'Spend' ]
-      @formulas.second_last_check.profit = @formulas.profit - second_previous_row[ 'The Profit' ]
+      @formulas.second_last_check.spend = container.ad_spend - second_previous_row[ :spend ]
+      @formulas.second_last_check.profit = @formulas.profit - second_previous_row[ :profit ]
       @formulas.second_last_check.roi = @formulas.second_last_check.profit / @formulas.second_last_check.spend * 100
-      @formulas.second_last_check.conversion_rate = ( total_adjusted.orders.to_f - second_previous_row[ 'Total Shopify Orders' ].to_f ) / ( container.unique_visitors.to_f - second_previous_row[ 'Unique Visitors' ].to_f ) * 100
+      @formulas.second_last_check.conversion_rate = ( total_adjusted.orders.to_f - second_previous_row[ :orders ] ) / ( container.unique_visitors.to_f - second_previous_row[ :unique_visitors ] ) * 100
     end
     
     @formulas
   end
   
+  
   def previous_row_method( sheet_client = nil )
-    sheet_client = sheetsu if sheet_client.nil?
-    
-    begin
-      rows = sheet_client.read(
-        search: { Date: date }
-      )
-    rescue Sheetsu::NotFoundError
-      return nil
-    end
-    
-    rows.last
+    rows = previous_rows_intro( sheet_client )
+    # rows.last if result.kind_of? Array
+    previous_rows_coercion( rows.last ) unless rows.blank?    
   end
   
   def previous_row( sheet_client = nil )
@@ -198,24 +191,41 @@ class Run
   end
   
   def second_previous_row_method( sheet_client = nil )
-    sheet_client = sheetsu if sheet_client.nil?
+    rows = previous_rows_intro( sheet_client )
     
-    begin
-      rows = sheet_client.read(
-        search: { Date: date }
-      )
-    rescue Sheetsu::NotFoundError
-      return nil
-    end
-    
-    if rows.length > 1
-      return rows[ -2 ]
+    # if result.kind_of? Array        
+    if !rows.blank? && rows.length > 1
+      return previous_rows_coercion( rows[ -2 ] )
     end
   end
   
   def second_previous_row( sheet_client = nil )
     @second_previous_row ||= second_previous_row_method( sheet_client )
   end
+  
+    def previous_rows_intro( sheet_client = nil )
+      sheet_client = sheetsu if sheet_client.nil?
+    
+      begin
+        rows = sheet_client.read(
+          search: { Date: date }
+        )
+      rescue Sheetsu::NotFoundError
+        return nil
+      end
+      rows
+    end
+  
+    def previous_rows_coercion( row )
+      return nil if row.blank?
+    
+      row[ :spend ] = row[ 'Spend' ].to_i
+      row[ :profit ] = row[ 'The Profit' ].to_i
+      row[ :orders ] = row[ 'Total Shopify Orders' ].to_f
+      row[ :unique_visitors ] = row[ 'Unique Visitors' ].to_f
+    
+      row    
+    end
   
   
   ## Not scraped sheet values
