@@ -42,9 +42,9 @@ class Run
     
         @formulas = formulas_replacement( total_adjusted, @container )
         
-        result = sheet_shiz( total_adjusted, @container, @formulas )
+        result_sheet = sheet_shiz( total_adjusted, @container, @formulas )
         
-        # pushover_notification( total_adjusted, container, formulas )
+        result_push = pushover_notification( total_adjusted, @container, @formulas )                
       ensure
         @wrap.browser.close if @wrap.browser.is_open?
       end
@@ -52,7 +52,7 @@ class Run
       $headless.destroy if !$headless.blank?
     end
     @base_logger.info 'END - Run - go'
-    result
+    result_sheet, result_push
   end
     
     # copy pasted, needed here
