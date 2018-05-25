@@ -7,6 +7,8 @@ class Run
   
   def initialize
     @base_logger = Rails.logger.loop
+    
+    pushover
   end
   
   def sheetsu
@@ -42,7 +44,7 @@ class Run
         
         result = sheet_shiz( total_adjusted, @container, @formulas )
         
-        
+        # pushover_notification( total_adjusted, container, formulas )
       ensure
         @wrap.browser.close if @wrap.browser.is_open?
       end
@@ -100,8 +102,10 @@ class Run
     )
   end
   
-  def pushover_notification( total_adjusted, container, formulas, pushover_client = nil )
-    
+  def pushover_notification( total_adjusted, container, formulas, pushover_client = nil )    
+    # title =
+    # message =
+    # Pushover.notification( title: title, message: message )
   end
   
   
