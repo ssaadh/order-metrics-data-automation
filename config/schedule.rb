@@ -31,7 +31,10 @@ set :output, 'log/cron_log.log'
 ##
 
 # early hours - hourly
-every '0 1,2,3,4,5,6 * * *' do
+every '0 1,3,5 * * *' do
+  rake 'core:run'
+end
+every '0 2,4,6 * * *' do
   rake 'core:run'
 end
 
@@ -42,12 +45,20 @@ every '58 23 * * *' do
 end
 
 # 8 am to 11 pm, every 30 min - at hour mark
-every '0 7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * *' do
+every '0 7,9,11,13,15,17,19,21,23 * * *' do
+  rake 'core:run'
+end
+# 8 am to 11 pm, every 30 min - at hour mark
+every '0 8,10,12,14,16,18,20,22 * * *' do
   rake 'core:run'
 end
 
 # 8 am to 11 pm, every 30 min - at 30 min mark
-every '30 7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22 * * *' do
+every '30 7,9,11,13,15,17,19,21 * * *' do
+  rake 'core:run'
+end
+# 8 am to 11 pm, every 30 min - at hour mark
+every '30 8,10,12,14,16,18,20,22 * * *' do
   rake 'core:run'
 end
 
